@@ -20,6 +20,11 @@
                 <a href="#support">Support</a>
                 <a href="https://t.me/iwypxe" target="_blank">Social Media</a>
             </nav>
+            <div class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
         </div>
     </header>
 
@@ -81,6 +86,10 @@
                     document.querySelector(this.hash).scrollIntoView({
                         behavior: 'smooth'
                     });
+                    // Close the navigation menu after clicking a link
+                    nav.classList.remove('nav-active');
+                    // Reset the hamburger menu
+                    hamburger.classList.remove('active');
                 }
             });
         });
@@ -95,6 +104,15 @@
 
         document.querySelectorAll('.product').forEach(section => {
             observer.observe(section);
+        });
+
+        // Hamburger menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const nav = document.querySelector('.nav');
+        
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('nav-active');
+            hamburger.classList.toggle('active');
         });
     </script>
 </body>
