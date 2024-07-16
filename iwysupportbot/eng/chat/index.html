@@ -1,1 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Чат</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            margin: 20px;
+            z-index: 1;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .from-user {
+            color: #fff;
+            text-align: right;
+        }
+        .from-admin {
+            color: #fff;
+            text-align: left;
+        }
+        .input-container {
+            display: flex;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        button {
+            padding: 5px 2px;
+            font-size: 14px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #000;
+        }
+        .loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transition: opacity 0.5s ease-out;
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loading-text {
+            font-size: 24px;
+            color: #fff;
+            animation: blink 1s infinite;
+        }
+        .loading-dots span {
+            display: inline-block;
+            opacity: 0;
+            animation: dot-blink 1s infinite;
+        }
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.25s;
+        }
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+        @keyframes blink {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        @keyframes dot-blink {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        .pixel {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 2px;
+            background: lime;
+            opacity: 0;
+            animation: fall linear infinite;
+            animation-fill-mode: forwards;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loadingScreen = document.querySelector('.loading-screen');
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                startPixelFall();
+            }, 3000);
 
+            function startPixelFall() {
+                const numPixels = 100;
+                for (let i = 0; i < numPixels; i++) {
+                    const pixel = document.createElement('div');
+                    pixel.classList.add('pixel');
+                    pixel.style.left = `${Math.random() * 100}vw`;
+                    pixel.style.animationDuration = `${Math.random() * 5 + 3}s`;
+                    pixel.style.animationDelay = `${Math.random() * 5}s`;
+                    document.body.appendChild(pixel);
+                }
+            }
+        });
+    </script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loading-text">
+            Загрузка<span class="loading-dots">
+                <span>.</span><span>.</span><span>.</span>
+            </span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="messages" id="messages"></div>
+        <div class="input-container">
+            <input type="text" id="reply" placeholder="Введите сообщение">
+            <button onclick="sendReply()">Отправить</button>
+        </div>
+        <button onclick="goBack()">Назад</button>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE4s4JtczEakh3wLybS_uIUb8lUyMr-zM",
+            authDomain: "iwysupp.firebaseapp.com",
+            databaseURL: "https://iwysupp-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "iwysupp",
+            storageBucket: "iwysupp.appspot.com",
+            messagingSenderId: "829101559797",
+            appId: "1:829101559797:web:ffd358cf411d26f38d1abc",
+            measurementId: "G-DVFQ0S4BCS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let user;
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
+            user = Telegram.WebApp.initDataUnsafe.user;
+        } else {
+            console.error("Telegram object is not defined.");
+            user = { id: "test_user", username: "testuser" }; // Test user for debugging
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestId = urlParams.get('requestId');
+
+        const messagesRef = ref(db, 'requests/' + requestId);
+
+        function loadMessages() {
+            onValue(messagesRef, snapshot => {
+                const request = snapshot.val();
+                const messagesContainer = document.getElementById('messages');
+                messagesContainer.innerHTML = '';
+                request.messages.forEach(msg => {
+                    const msgClass = msg.from === user.username ? 'from-user' : 'from-admin';
+                    messagesContainer.innerHTML += `<p class="message ${msgClass}"><strong>${msg.from}:</strong> ${msg.text}</p>`;
+                });
+            });
+        }
+
+        async function sendReply() {
+            const replyText = document.getElementById('reply').value;
+            if (replyText) {
+                const snapshot = await get(messagesRef);
+                const request = snapshot.val();
+                request.messages.push({ from: user.username, text: replyText });
+                await update(messagesRef, { messages: request.messages });
+
+                document.getElementById('reply').value = '';
+
+                const botToken = '7283517675:AAEAGAVwCKjCU27cRUnM6L8wTLRELULv0GA';
+                const adminId = '6426297503';
+
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: adminId,
+                        text: `Новый ответ от @${user.username} (${user.id}): ${replyText}`
+                    })
+                }).then(response => {
+                    if (!response.ok) {
+                        alert("Ошибка отправки ответа в Telegram.");
+                    }
+                });
+            }
+        }
+
+        window.sendReply = sendReply;
+
+        function goBack() {
+            window.location.href = "/iwysupportbot/eng/requests";
+        }
+
+        window.goBack = goBack;
+
+        loadMessages();
+
+        document.addEventListener('touchend', function(event) {
+            if (!event.target.closest('input')) {
+                document.activeElement.blur();
+            }
+        });
+    </script>
+</body>
+</html>
