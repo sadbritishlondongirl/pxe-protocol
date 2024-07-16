@@ -111,8 +111,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            background-color: #000;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 2;
@@ -122,9 +123,70 @@
             opacity: 0;
             pointer-events: none;
         }
+        .loading-image {
+            width: 100px;
+            height: 100px;
+            background-image: url('/iwysupportbot/images/iwyclover.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: rotate 2s infinite linear, sparkle 1.5s infinite linear;
+        }
         .loading-text {
             font-size: 24px;
+            margin-top: 20px;
             animation: blink 1s infinite;
+        }
+        .loading-dots span {
+            display: inline-block;
+            opacity: 0;
+            animation: dot-blink 1s infinite;
+        }
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.25s;
+        }
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+        @keyframes dot-blink {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        .progress-bar {
+            width: 80%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .progress-bar-inner {
+            width: 0;
+            height: 100%;
+            background: lime;
+            animation: load 3s linear forwards;
+        }
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes sparkle {
+            0%, 100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.5);
+            }
         }
         @keyframes blink {
             0%, 100% {
@@ -132,6 +194,14 @@
             }
             50% {
                 opacity: 0;
+            }
+        }
+        @keyframes load {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
             }
         }
         @keyframes fall {
@@ -157,6 +227,26 @@
             animation: fall linear infinite;
             animation-fill-mode: forwards;
         }
+        .language-button {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 2px 5px;
+            font-size: 12px;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+            width: auto;
+            text-align: center;
+        }
+        .language-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #000;
+        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -178,6 +268,10 @@
                 }
             }
         });
+
+        function switchToEnglish() {
+            window.location.href = "/iwysupportbot/ru";
+        }
     </script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script type="module">
@@ -193,7 +287,7 @@
             storageBucket: "iwysupp.appspot.com",
             messagingSenderId: "829101559797",
             appId: "1:829101559797:web:ffd358cf411d26f38d1abc",
-            measurementId: "G-DVFQ0S4BCS"
+            measurementId: "G-DVFZWB84XZ"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -256,11 +350,11 @@
         }
 
         window.viewRequests = function viewRequests() {
-            window.location.href = "/iwysupportbot/requests";
+            window.location.href = "/iwysupportbot/eng/requests";
         }
 
         window.viewFAQ = function viewFAQ() {
-            window.location.href = "/iwysupportbot/faq";
+            window.location.href = "/iwysupportbot/eng/faq";
         }
 
         Telegram.WebApp.ready();
@@ -286,7 +380,15 @@
 </head>
 <body>
     <div class="loading-screen">
-        <div class="loading-text">Загрузка...</div>
+        <div class="loading-image"></div>
+        <div class="loading-text">
+            Loading<span class="loading-dots">
+                <span>.</span><span>.</span><span>.</span>
+            </span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-bar-inner"></div>
+        </div>
     </div>
     <div class="pixel-background">
         iwy pxe Protocol
@@ -297,7 +399,6 @@
         <button onclick="viewRequests()">Мои запросы в поддержку</button>
         <button onclick="viewFAQ()">FAQ</button>
     </div>
-
     <div id="requestModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -308,5 +409,6 @@
             <button onclick="submitRequest()">Отправить</button>
         </div>
     </div>
+    <button class="language-button" onclick="switchToEnglish()">ENG</button>
 </body>
 </html>
