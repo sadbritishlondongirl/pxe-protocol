@@ -15,27 +15,18 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
             color: #fff;
-            position: relative;
-        }
-        .pixel-background {
-            position: absolute;
-            top: 50px;
-            left: 55%;
-            transform: translateX(-50%);
-            font-size: 48px;
-            color: lime;
-            z-index: 0;
-            opacity: 0.8;
+            text-align: center;
         }
         .loading-text {
             font-size: 24px;
-            text-align: center;
-            z-index: 1;
+            margin-bottom: 20px;
+            animation: shine 3s infinite;
         }
         .loading-text .loading-dots span {
             display: inline-block;
@@ -59,13 +50,23 @@
                 opacity: 1;
             }
         }
+        @keyframes shine {
+            0% {
+                color: #fff;
+            }
+            50% {
+                color: #ccc;
+            }
+            100% {
+                color: #fff;
+            }
+        }
         .heart {
             width: 100px;
             height: 90px;
             position: relative;
             transform: rotate(-45deg);
-            transform-origin: 0 0;
-            margin-bottom: 20px;
+            margin-top: 20px;
             animation: heartbeat 1s infinite;
         }
         .heart::before,
@@ -74,14 +75,16 @@
             width: 100px;
             height: 90px;
             position: absolute;
-            border-radius: 50px 50px 0 0;
+            border-radius: 50%;
             background: red;
         }
         .heart::before {
+            top: 0;
             left: 50px;
         }
         .heart::after {
             top: -50px;
+            left: 0;
         }
         @keyframes heartbeat {
             0%, 100% {
@@ -98,6 +101,5 @@
         It looks like technical work is being done here<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
     </div>
     <div class="heart"></div>
-    <div class="pixel-background">iwy pxe Protocol</div>
 </body>
 </html>
