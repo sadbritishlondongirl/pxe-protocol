@@ -64,34 +64,18 @@
         .heart {
             width: 100px;
             height: 90px;
-            position: relative;
-            transform: rotate(-45deg);
-            margin-top: 20px;
-            animation: heartbeat 1s infinite;
-        }
-        .heart::before,
-        .heart::after {
-            content: "";
-            width: 100px;
-            height: 90px;
+            background: url('/iwysupportbot/images/heart.png') no-repeat center;
+            background-size: contain;
             position: absolute;
-            border-radius: 50%;
-            background: red;
-        }
-        .heart::before {
-            top: 0;
-            left: 50px;
-        }
-        .heart::after {
-            top: -50px;
-            left: 0;
+            bottom: 20px;
+            animation: heartbeat 1s infinite;
         }
         @keyframes heartbeat {
             0%, 100% {
-                transform: scale(1) rotate(-45deg);
+                transform: scale(1);
             }
             50% {
-                transform: scale(1.2) rotate(-45deg);
+                transform: scale(1.2);
             }
         }
     </style>
