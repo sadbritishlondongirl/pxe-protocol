@@ -1,1 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FAQ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #fff;
+        }
+        ul {
+            padding-left: 20px;
+            color: #fff;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #000;
+        }
+        .loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transition: opacity 0.5s ease-out;
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loading-text {
+            font-size: 24px;
+            color: #fff;
+            animation: blink 1s infinite;
+        }
+        .loading-dots span {
+            display: inline-block;
+            opacity: 0;
+            animation: dot-blink 1s infinite;
+        }
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.25s;
+        }
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+        @keyframes blink {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        @keyframes dot-blink {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        .pixel {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 2px;
+            background: lime;
+            opacity: 0;
+            animation: fall linear infinite;
+            animation-fill-mode: forwards;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loadingScreen = document.querySelector('.loading-screen');
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                startPixelFall();
+            }, 3000);
 
+            function startPixelFall() {
+                const numPixels = 100;
+                for (let i = 0; i < numPixels; i++) {
+                    const pixel = document.createElement('div');
+                    pixel.classList.add('pixel');
+                    pixel.style.left = `${Math.random() * 100}vw`;
+                    pixel.style.animationDuration = `${Math.random() * 5 + 3}s`;
+                    pixel.style.animationDelay = `${Math.random() * 5}s`;
+                    document.body.appendChild(pixel);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loading-text">
+            Загрузка<span class="loading-dots">
+                <span>.</span><span>.</span><span>.</span>
+            </span>
+        </div>
+    </div>
+    <div class="container">
+        <h1>FAQ</h1>
+        <ul>
+            <li><strong>Как создать запрос в поддержку?</strong><br>Нажмите кнопку "Создать запрос в поддержку" на главной странице и опишите вашу проблему.</li>
+            <li><strong>Как просмотреть мои запросы?</strong><br>Нажмите кнопку "Мои запросы в поддержку" на главной странице.</li>
+            <li><strong>Как часто обновляются ответы?</strong><br>Ответы обновляются автоматически по мере их поступления.</li>
+            <li><strong>Не получается отправить запрос?</strong><br>Установите юзернейм, отправить запрос можно только с ним.</li>
+            <li><strong>Как прикрепить фото или видеоматериал?</strong><br>Используйте онлайн сервисы такие как ImgBB и YouTube и отправьте ссылку нам.</li>
+        </ul>
+        <button onclick="goBack()">Назад</button>
+    </div>
+    <script>
+        function goBack() {
+            window.location.href = '/iwysupportbot';
+        }
+    </script>
+</body>
+</html>
