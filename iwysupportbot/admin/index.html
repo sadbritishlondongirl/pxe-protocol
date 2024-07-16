@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Администратор</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            margin: 20px;
+            z-index: 1;
+        }
+        .request-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .request-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .login-container input {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .login-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .login-container button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" id="login-container">
+        <h1>Авторизация</h1>
+        <input type="text" id="login" placeholder="Логин">
+        <input type="password" id="password" placeholder="Пароль">
+        <button onclick="login()">Войти</button>
+    </div>
+    <div class="container" id="admin-container" style="display: none;">
+        <h1>Список запросов</h1>
+        <div class="request-list" id="request-list"></div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDE4s4JtczEakh3wLybS_uIUb8lUyMr-zM",
+            authDomain: "iwysupp.firebaseapp.com",
+            databaseURL: "https://iwysupp-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "iwysupp",
+            storageBucket: "iwysupp.appspot.com",
+            messagingSenderId: "829101559797",
+            appId: "1:829101559797:web:ffd358cf411d26f38d1abc",
+            measurementId: "G-DVFQ0S4BCS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const requestsRef = ref(db, 'requests');
+
+        function loadRequests() {
+            onValue(requestsRef, snapshot => {
+                const requests = snapshot.val();
+                const requestList = document.getElementById('request-list');
+                requestList.innerHTML = '';
+                for (const requestId in requests) {
+                    const request = requests[requestId];
+                    const requestItem = document.createElement('div');
+                    requestItem.classList.add('request-item');
+                    requestItem.textContent = `Запрос от ${request.userId}`;
+                    requestItem.onclick = () => {
+                        window.location.href = `adminchat.html?requestId=${requestId}`;
+                    };
+                    requestList.appendChild(requestItem);
+                }
+            });
+        }
+
+        function login() {
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+
+            if (login === 'saiva' && password === 'ajakzkzkf') {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('admin-container').style.display = 'flex';
+                loadRequests();
+            } else {
+                alert('Неверный логин или пароль');
+            }
+        }
+
+        window.login = login;
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('input')) {
+                document.activeElement.blur();
+            }
+        });
+    </script>
+</body>
+</html>
