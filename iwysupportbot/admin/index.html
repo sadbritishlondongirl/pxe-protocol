@@ -117,7 +117,7 @@
                     requestItem.classList.add('request-item');
                     requestItem.textContent = `Запрос от ${request.userId}`;
                     requestItem.onclick = () => {
-                        window.location.href = `adminchat.html?requestId=${requestId}`;
+                        window.location.href = `/iwysupportbot/admin/adminchat?requestId=${requestId}`;
                     };
                     requestList.appendChild(requestItem);
                 }
