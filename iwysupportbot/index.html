@@ -126,14 +126,6 @@
             font-size: 24px;
             animation: blink 1s infinite;
         }
-    @keyframes dot-blink {
-        0%, 100% {
-            opacity: 0;
-        }
-        50% {
-            opacity: 1;
-        }
-    }
         @keyframes blink {
             0%, 100% {
                 opacity: 1;
@@ -179,9 +171,9 @@
                 for (let i = 0; i < numPixels; i++) {
                     const pixel = document.createElement('div');
                     pixel.classList.add('pixel');
-                    pixel.style.left = `${Math.random() * 100}vw`;
-                    pixel.style.animationDuration = `${Math.random() * 5 + 3}s`;
-                    pixel.style.animationDelay = `${Math.random() * 5}s`;
+                    pixel.style.left = ${Math.random() * 100}vw;
+                    pixel.style.animationDuration = ${Math.random() * 5 + 3}s;
+                    pixel.style.animationDelay = ${Math.random() * 5}s;
                     document.body.appendChild(pixel);
                 }
             }
@@ -246,12 +238,12 @@
                     console.error("Ошибка отправки запроса: ", error);
                 });
 
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                fetch(https://api.telegram.org/bot${botToken}/sendMessage, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: adminId,
-                        text: `Новый запрос от @${user.username} (${user.id}):\nТема: ${subject}\nEmail: ${email}\nСообщение: ${message}`
+                        text: Новый запрос от @${user.username} (${user.id}):\nТема: ${subject}\nEmail: ${email}\nСообщение: ${message}
                     })
                 }).then(response => {
                     if (!response.ok) {
@@ -285,7 +277,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const user = Telegram.WebApp.initDataUnsafe.user;
             if (user) {
-                document.querySelector('h1').textContent = `Привет, ${user.first_name}`;
+                document.querySelector('h1').textContent = Привет, ${user.first_name};
             } else {
                 document.querySelector('h1').textContent = 'Привет, Гость';
             }
@@ -294,7 +286,8 @@
 </head>
 <body>
     <div class="loading-screen">
-    <div class="loading-text">Loading...</div>
+        <div class="loading-text">Загрузка...</div>
+    </div>
     <div class="pixel-background">
         iwy pxe Protocol
     </div>
