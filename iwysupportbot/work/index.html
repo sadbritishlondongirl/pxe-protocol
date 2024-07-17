@@ -7,7 +7,7 @@
     <style>
         @font-face {
             font-family: 'PixelFont';
-            src: url('/iwysupportbot/font/iwy.ttf') format('truetype');
+            src: url('font/iwy.ttf') format('truetype');
         }
         body {
             font-family: 'PixelFont', Arial, sans-serif;
@@ -24,8 +24,8 @@
             text-align: center;
         }
         .loading-text {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 6vw;
+            margin-bottom: 5vh;
             animation: shine 3s infinite;
         }
         .loading-text .loading-dots span {
@@ -62,12 +62,12 @@
             }
         }
         .heart {
-            width: 100px;
-            height: 90px;
+            width: 25vw;
+            height: 22.5vw;
             background: url('/iwysupportbot/images/heart.png') no-repeat center;
             background-size: contain;
             position: absolute;
-            bottom: 20px;
+            bottom: 5vh;
             animation: heartbeat 1s infinite;
         }
         @keyframes heartbeat {
@@ -76,6 +76,15 @@
             }
             50% {
                 transform: scale(1.2);
+            }
+        }
+        @media (min-width: 768px) {
+            .loading-text {
+                font-size: 3vw;
+            }
+            .heart {
+                width: 12.5vw;
+                height: 11.25vw;
             }
         }
     </style>
