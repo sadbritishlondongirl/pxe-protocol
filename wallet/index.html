@@ -53,7 +53,7 @@
     </div>
     <script>
         document.getElementById('createWalletBtn').addEventListener('click', function() {
-            fetch('http://16.170.239.146:5000/create-wallet')
+            fetch('https://wallet.iwypxe.fun/create-wallet')
                 .then(response => response.json())
                 .then(data => {
                     const walletInfoDiv = document.getElementById('walletInfo');
