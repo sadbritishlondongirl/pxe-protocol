@@ -3,68 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iwy Wallet</title>
+    <title>Web3 Info Page</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f5f5f5;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
         }
+        
+        @keyframes fall {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .clover {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: url('https://path-to-clover-image.png') no-repeat center center;
+            background-size: cover;
+            animation: fall linear infinite;
+        }
+
+        .clover:nth-child(odd) {
+            animation-duration: 10s;
+        }
+
+        .clover:nth-child(even) {
+            animation-duration: 15s;
+        }
+
         .container {
             text-align: center;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
         }
+
+        .container h1 {
+            font-size: 3em;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
         .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            text-decoration: none;
             display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-        }
-        .button:disabled {
-            background-color: #ccc;
-        }
-        .output {
+            padding: 10px 20px;
             margin-top: 20px;
-            padding: 10px;
-            background-color: #e8e8e8;
-            border-radius: 5px;
-            display: none;
+            border: 2px solid #fff;
+            background-color: transparent;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 1em;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>iwy Wallet</h1>
-        <button id="createWalletBtn" class="button">Create Wallet</button>
-        <div id="walletInfo" class="output"></div>
+        <h1>The wallet will be available soon</h1>
+        <a href="https://iwypxe.fun" class="button">Back to site</a>
     </div>
+    <div class="footer">© 2024 with love Saiva & iwy Pxe team</div>
+    
     <script>
-        document.getElementById('createWalletBtn').addEventListener('click', function() {
-            fetch('https://wallet.iwypxe.fun/create-wallet')
-                .then(response => response.json())
-                .then(data => {
-                    const walletInfoDiv = document.getElementById('walletInfo');
-                    walletInfoDiv.style.display = 'block';
-                    walletInfoDiv.textContent = `Wallet Address: ${data.address}\nPrivate Key: ${data.privateKey}`;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to create wallet. Please try again.');
-                });
-        });
+        // Generate falling clovers
+        const createClover = () => {
+            const clover = document.createElement('div');
+            clover.className = 'clover';
+            clover.style.left = `${Math.random() * 100}%`;
+            clover.style.animationDelay = `${Math.random() * 10}s`;
+            document.body.appendChild(clover);
+        }
+
+        for (let i = 0; i < 20; i++) {
+            createClover();
+        }
     </script>
 </body>
 </html>
