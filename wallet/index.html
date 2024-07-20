@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iwy Wallet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:disabled {
+            background-color: #ccc;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e8e8e8;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>iwy Wallet</h1>
+        <button id="createWalletBtn" class="button">Create Wallet</button>
+        <div id="walletInfo" class="output"></div>
+    </div>
+    <script>
+        document.getElementById('createWalletBtn').addEventListener('click', function() {
+            fetch('http://16.170.239.146:5000/create-wallet')
+                .then(response => response.json())
+                .then(data => {
+                    const walletInfoDiv = document.getElementById('walletInfo');
+                    walletInfoDiv.style.display = 'block';
+                    walletInfoDiv.textContent = `Wallet Address: ${data.address}\nPrivate Key: ${data.privateKey}`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to create wallet. Please try again.');
+                });
+        });
+    </script>
+</body>
+</html>
